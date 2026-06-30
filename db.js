@@ -191,6 +191,7 @@
           project_id: p.id,
           year: p.year,
           name: p.name,
+          department: p.department || '',
           allocated_amount: p.allocated_amount,
           used_amount: usedAmount,
           balance: balance,
