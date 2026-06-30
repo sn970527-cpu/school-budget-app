@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>학교 예산 관리 앱 - 와이어프레임</title>
+<style>
+  :root{
+    --line:#888;
+    --box:#f4f4f4;
+    --accent:#2b6cb0;
+    --text:#222;
+    --muted:#999;
+  }
+  body{
+    font-family:'Segoe UI', 'Malgun Gothic', sans-serif;
+    background:#e9e9e9;
+    margin:0;
+    padding:24px;
+    color:var(--text);
+  }
+  h1{font-size:20px; margin-bottom:24px;}
+  .screen{
+    background:#fff;
+    border:2px dashed var(--line);
+    border-radius:6px;
+    width:920px;
+    margin:0 auto 60px auto;
+    padding:0;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  }
+  .screen-title{
+    background:#333;
+    color:#fff;
+    padding:8px 16px;
+    font-size:13px;
+    border-radius:4px 4px 0 0;
+    letter-spacing:0.5px;
+  }
+  .content{padding:20px;}
+  .box{
+    border:1px solid var(--line);
+    background:var(--box);
+    border-radius:4px;
+    padding:10px 14px;
+    margin-bottom:10px;
+    font-size:13px;
+  }
+  .row{display:flex; gap:10px;}
+  .row > .box{flex:1;}
+  .label{font-size:11px; color:var(--muted); margin-bottom:4px; display:block;}
+  .btn{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    padding:8px 16px;
+    border-radius:4px;
+    font-size:13px;
+    text-align:center;
+    cursor:default;
+  }
+  .btn.gray{background:#777;}
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:16px;
+  }
+  .badge{
+    font-size:11px; background:#fff3cd; border:1px solid #e0c46c;
+    padding:2px 8px; border-radius:10px;
+  }
+  table{width:100%; border-collapse:collapse; font-size:12px;}
+  th,td{border:1px solid var(--line); padding:6px 8px; text-align:left;}
+  th{background:#f0f0f0;}
+  .danger{color:#c0392b; font-weight:bold;}
+  .card{
+    border:1px solid var(--line); border-radius:6px; padding:12px; flex:1;
+    background:#fafafa;
+  }
+  .cards{display:flex; gap:12px; margin-bottom:16px;}
+  .bar-bg{background:#ddd; border-radius:4px; height:10px; margin-top:6px; overflow:hidden;}
+  .bar-fill{background:var(--accent); height:100%;}
+  .footer{
+    border-top:1px solid var(--line); margin-top:16px; padding-top:8px;
+    font-size:11px; color:var(--muted); display:flex; gap:12px;
+  }
+  .note{font-size:11px; color:#b35; margin-top:4px;}
+</style>
+</head>
+<body>
+
+<h1>학교 예산 사용 관리 웹앱 — 화면 와이어프레임 (저해상도)</h1>
+
+<!-- 1. 로그인 -->
+<div class="screen">
+  <div class="screen-title">화면 1 · 로그인</div>
+  <div class="content" style="max-width:360px; margin:0 auto;">
+    <div class="box"><span class="label">이메일(학교 계정)</span>______________________</div>
+    <div class="box"><span class="label">비밀번호</span>______________________</div>
+    <div class="btn" style="width:100%; box-sizing:border-box; text-align:center; margin-bottom:8px;">로그인</div>
+    <div style="text-align:center; font-size:12px; color:var(--accent);">비밀번호를 잊으셨나요?</div>
+  </div>
+</div>
+
+<!-- 2. 관리자 대시보드 -->
+<div class="screen">
+  <div class="screen-title">화면 2 · 관리자 대시보드</div>
+  <div class="content">
+    <div class="topbar">
+      <div>학교 예산 관리 <span class="badge">관리자</span></div>
+      <div style="font-size:12px;">홍길동 님 | 로그아웃</div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <span class="btn">+ 새 프로젝트 등록</span>
+      <span class="btn gray" style="margin-left:8px;">엑셀 내보내기</span>
+      <span class="btn gray" style="margin-left:8px;">사용자 관리</span>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <strong>2026 · 도서관 운영비</strong>
+        <div style="font-size:12px; margin-top:6px;">배정 5,000,000 / 사용 3,200,000</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:64%;"></div></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">잔액 1,800,000원 (64% 사용)</div>
+      </div>
+      <div class="card">
+        <strong>2026 · 환경교육 사업</strong>
+        <div style="font-size:12px; margin-top:6px;">배정 2,000,000 / 사용 2,150,000</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%; background:#c0392b;"></div></div>
+        <div style="font-size:11px;" class="danger">잔액 -150,000원 (초과 사용)</div>
+      </div>
+      <div class="card">
+        <strong>2026 · 체육 기자재</strong>
+        <div style="font-size:12px; margin-top:6px;">배정 1,500,000 / 사용 400,000</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:27%;"></div></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">잔액 1,100,000원 (27% 사용)</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>연도</th><th>사업명</th><th>배정액</th><th>사용액</th><th>잔액</th><th>담당자</th><th></th></tr>
+      <tr><td>2026</td><td>도서관 운영비</td><td>5,000,000</td><td>3,200,000</td><td>1,800,000</td><td>김교사</td><td>상세 ▸</td></tr>
+      <tr><td>2026</td><td>환경교육 사업</td><td>2,000,000</td><td>2,150,000</td><td class="danger">-150,000</td><td>박교사</td><td>상세 ▸</td></tr>
+    </table>
+    <div class="footer">
+      <span>개인정보처리방침</span><span>이용약관</span><span>책임자: 조정연 / 서울언북초등학교 / 02-514-5981</span><span>© 2026 ingyu's AI world. All rights reserved.</span>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 프로젝트 등록 -->
+<div class="screen">
+  <div class="screen-title">화면 3 · 프로젝트(예산) 등록 — 1순위 화면</div>
+  <div class="content" style="max-width:480px;">
+    <div class="box"><span class="label">회계연도</span>2026</div>
+    <div class="box"><span class="label">사업명</span>______________________</div>
+    <div class="box"><span class="label">배정액(원)</span>______________________</div>
+    <div class="box"><span class="label">담당 교사 지정 (복수 선택 가능)</span>
+      [✓] 김교사&nbsp;&nbsp;[ ] 박교사&nbsp;&nbsp;[ ] 이교사
+    </div>
+    <div class="box"><span class="label">비고</span>______________________</div>
+    <div class="btn">등록하기</div>
+  </div>
+</div>
+
+<!-- 4. 사용 내역 등록 (일반 교사) -->
+<div class="screen">
+  <div class="screen-title">화면 4 · 사용 내역 등록 — 2순위 화면 (일반 교사)</div>
+  <div class="content" style="max-width:480px;">
+    <div class="box"><span class="label">프로젝트 선택</span>도서관 운영비 (잔액 1,800,000원)</div>
+    <div class="row">
+      <div class="box"><span class="label">항목명</span>도서 구입</div>
+      <div class="box"><span class="label">금액(원)</span>250,000</div>
+    </div>
+    <div class="box"><span class="label">사용일자</span>2026-06-28</div>
+    <div class="box"><span class="label">증빙 파일 첨부</span>[ 파일 선택 ] 영수증.pdf (업로드됨)</div>
+    <div class="btn">저장 (승인 절차 없이 즉시 반영)</div>
+    <div class="note">※ 잔액을 초과하는 경우 저장은 가능하나 화면에 초과 경고가 표시됩니다.</div>
+  </div>
+</div>
+
+<!-- 5. 일반 교사 대시보드 -->
+<div class="screen">
+  <div class="screen-title">화면 5 · 일반 교사 대시보드 (담당 항목만 표시)</div>
+  <div class="content">
+    <div class="topbar">
+      <div>학교 예산 관리 <span class="badge" style="background:#dbe9ff; border-color:#9bc2ff;">일반 교사</span></div>
+      <div style="font-size:12px;">김교사 님 | 로그아웃</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <strong>2026 · 도서관 운영비 (담당)</strong>
+        <div style="font-size:12px; margin-top:6px;">배정 5,000,000 / 사용 3,200,000</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:64%;"></div></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">잔액 1,800,000원</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>일자</th><th>항목</th><th>금액</th><th>증빙</th><th>작성자</th><th></th></tr>
+      <tr><td>2026-06-28</td><td>도서 구입</td><td>250,000</td><td>영수증.pdf</td><td>김교사(나)</td><td>수정 ▸</td></tr>
+      <tr><td>2026-06-15</td><td>서가 정리 용품</td><td>80,000</td><td>영수증.jpg</td><td>김교사(나)</td><td>수정 ▸</td></tr>
+    </table>
+    <div class="note">※ 삭제 버튼은 표시되지 않음 (삭제는 관리자만 가능)</div>
+    <div class="footer">
+      <span>개인정보처리방침</span><span>이용약관</span><span>책임자: 조정연 / 서울언북초등학교 / 02-514-5981</span><span>© 2026 ingyu's AI world. All rights reserved.</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 사용자 관리 (관리자 전용) -->
+<div class="screen">
+  <div class="screen-title">화면 6 · 사용자 관리 (관리자 전용)</div>
+  <div class="content">
+    <div style="margin-bottom:12px;">
+      <span class="btn">+ 새 계정 추가</span>
+    </div>
+    <table>
+      <tr><th>이름</th><th>이메일</th><th>직책/부서</th><th>역할</th><th>상태</th><th></th></tr>
+      <tr><td>홍길동</td><td>hong@school.kr</td><td>행정실</td><td>관리자</td><td>활성</td><td>수정 ▸</td></tr>
+      <tr><td>김교사</td><td>kim@school.kr</td><td>도서관 담당</td><td>일반 교사</td><td>활성</td><td>수정 ▸</td></tr>
+      <tr><td>박교사</td><td>park@school.kr</td><td>환경교육 담당</td><td>일반 교사</td><td><span class="danger">비활성</span></td><td>수정 ▸</td></tr>
+    </table>
+    <div class="note">※ 계정 비활성화 시 로그인 차단, 기존 등록 데이터는 보존됨(소프트 삭제)</div>
+    <div class="footer">
+      <span>개인정보처리방침</span><span>이용약관</span><span>책임자: 조정연 / 서울언북초등학교 / 02-514-5981</span><span>© 2026 ingyu's AI world. All rights reserved.</span>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 정책 페이지 / 푸터 팝업 -->
+<div class="screen">
+  <div class="screen-title">화면 7 · 개인정보처리방침 / 이용약관 (푸터 클릭 시 팝업 또는 별도 페이지)</div>
+  <div class="content" style="max-width:640px;">
+    <div class="box" style="background:#fff; border-style:solid;">
+      <strong>개인정보처리방침</strong>
+      <div style="font-size:12px; margin-top:8px; line-height:1.6;">
+        1. 처리 목적: 예산 집행 관리 및 권한 부여<br>
+        2. 처리 항목: 이름, 직책/부서, 이메일<br>
+        3. 보유 기간: 재직 기간 + 퇴직 후 ___년<br>
+        4. 파기 절차 및 방법: 보유 기간 경과 후 지체 없이 파기<br>
+        5. 제3자 제공: 없음<br>
+        6. 처리 위탁: 없음 (또는 호스팅사명 기재)<br>
+        7. 안전성 확보조치: 비밀번호 암호화, HTTPS 통신 등<br>
+        8. 권리 행사 방법 및 개인정보 보호책임자<br>
+        &nbsp;&nbsp;&nbsp;- 성명: 조정연<br>
+        &nbsp;&nbsp;&nbsp;- 소속: 서울언북초등학교<br>
+        &nbsp;&nbsp;&nbsp;- 연락처: 02-514-5981<br>
+      </div>
+    </div>
+    <div style="text-align:right; margin-top:8px;">
+      <span class="btn gray">이용약관 보기 (별도 팝업)</span>
+      <span class="btn gray" style="margin-left:6px;">닫기</span>
+    </div>
+    <div class="note">※ 개인정보처리방침과 이용약관은 각각 별도 팝업으로 분리 표시됩니다. 실제 문구는 학교/교육청 담당자 검토 후 확정 필요 (PRD 6장 참고)</div>
+    <div class="box" style="background:#fafafa; border-style:dashed; margin-top:10px; font-size:11px; color:var(--muted);">
+      © 2026 ingyu's AI world. All rights reserved.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

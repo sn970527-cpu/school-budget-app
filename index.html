@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학교 예산 사용 관리 시스템</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+  <!-- 상단 네비게이션 바 (로그인 시 노출) -->
+  <header id="app-header" style="display: none;">
+    <div class="nav-container">
+      <div class="logo">
+        학교 예산 관리
+        <span id="nav-role-badge" class="logo-badge">일반 교사</span>
+      </div>
+      <div class="user-info">
+        <span class="user-name" id="nav-user-name">교사명</span> 님
+        <button class="btn-logout" id="btn-logout">로그아웃</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨텐츠 영역 -->
+  <main class="container">
+    
+    <!-- 1. 로그인 화면 -->
+    <div id="screen-login" class="login-wrapper">
+      <div class="card login-card">
+        <h2 class="card-title" style="border: none; padding: 0; text-align: center; margin-bottom: 24px; font-size: 22px;">학교 예산 관리 로그인</h2>
+        
+        <div id="login-alert" class="alert alert-danger" style="display: none;"></div>
+
+        <form id="form-login" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="login-email">이메일 (학교 계정)</label>
+            <input class="form-input" type="email" id="login-email" placeholder="example@school.kr" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label class="form-label" for="login-password">비밀번호</label>
+            <input class="form-input" type="password" id="login-password" placeholder="비밀번호 입력" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 12px;">로그인</button>
+        </form>
+        <div style="text-align: center; margin-top: 16px; font-size: 13px;">
+          <a href="#" id="btn-forgot-password" style="color: var(--primary); text-decoration: none;">비밀번호를 잊으셨나요? (설명 확인)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 프로젝트/예산 등록 화면 (관리자 전용) -->
+    <div id="screen-project-registration" style="display: none; max-width: 600px; margin: 0 auto;">
+      <div class="card">
+        <h2 class="card-title">프로젝트(예산) 등록</h2>
+        
+        <div id="reg-alert" class="alert" style="display: none;"></div>
+
+        <form id="form-project-reg" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="reg-year">회계연도</label>
+            <select class="form-input" id="reg-year">
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-dept">담당 부서명</label>
+            <input class="form-input" type="text" id="reg-dept" placeholder="예: 행정실, 교육정보부, 체육부" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="reg-name">사업명</label>
+            <input class="form-input" type="text" id="reg-name" placeholder="예: 도서관 운영비, 체육 기자재" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-amount">배정액 (원)</label>
+            <input class="form-input" type="number" id="reg-amount" min="0" placeholder="예: 5000000" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-owner-name">사업 담당 교사 이름</label>
+            <input class="form-input" type="text" id="reg-owner-name" placeholder="예: 김교사" required>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label class="form-label" for="reg-note">비고</label>
+            <textarea class="form-input" id="reg-note" rows="3" placeholder="기타 참고사항을 입력하세요."></textarea>
+          </div>
+
+          <div style="display: flex; gap: 12px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">등록하기</button>
+            <button type="button" id="btn-reg-cancel" class="btn btn-secondary" style="flex: 1;">뒤로가기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. 메인 대시보드 화면 -->
+    <div id="screen-dashboard" style="display: none;">
+      <!-- 상단 액션 바 -->
+      <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 20px; font-weight: 700; color: var(--text-main);">예산 배정 현황</h2>
+        <div id="admin-actions" style="display: none;">
+          <button class="btn btn-primary" id="btn-go-to-reg">+ 새 프로젝트 등록</button>
+        </div>
+      </div>
+
+      <!-- 프로젝트 카드 목록 -->
+      <div id="dashboard-project-cards" class="project-cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <!-- JS에서 동적으로 렌더링 -->
+      </div>
+
+      <!-- 프로젝트 상세 목록 테이블 -->
+      <div class="card">
+        <h3 class="card-title">프로젝트 목록</h3>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="dashboard-project-table">
+            <thead>
+              <tr>
+                <th>연도</th>
+                <th>부서</th>
+                <th>사업명</th>
+                <th>배정액</th>
+                <th>사용액</th>
+                <th>잔액</th>
+                <th>담당자</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- JS에서 동적으로 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 프로젝트 상세 및 지출 관리 화면 -->
+    <div id="screen-project-detail" style="display: none;">
+      <!-- 뒤로가기 버튼 -->
+      <div style="margin-bottom: 16px;">
+        <button class="btn btn-secondary" id="btn-back-to-dashboard">← 목록으로 돌아가기</button>
+      </div>
+
+      <!-- 프로젝트 요약 카드 -->
+      <div class="card" id="project-summary-card">
+        <!-- JS에서 프로젝트 정보, 잔액, 프로그레스 바 렌더링 -->
+      </div>
+
+      <!-- 지출 등록 폼 카드 -->
+      <div class="card" id="card-expense-reg">
+        <h3 class="card-title" id="expense-form-title">사용 내역 등록</h3>
+        
+        <!-- 실시간 초과 지출 경고 배너 -->
+        <div id="expense-warning" class="alert alert-warning" style="display: none; margin-bottom: 16px;">
+          <strong>지출 초과 경고</strong>: 입력된 금액이 현재 프로젝트의 남은 잔액을 초과합니다. 등록은 가능하나 빨간색 잔액 경고가 남게 됩니다.
+        </div>
+
+        <div id="expense-alert" class="alert" style="display: none;"></div>
+
+        <form id="form-expense-reg" onsubmit="return false;">
+          <input type="hidden" id="expense-id"> <!-- 수정 모드 시 사용 -->
+          
+          <div class="form-group" style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+            <div>
+              <label class="form-label" for="exp-item-name">지출 항목명</label>
+              <input class="form-input" type="text" id="exp-item-name" placeholder="예: 도서 구입, 교구 구매" required>
+            </div>
+            <div>
+              <label class="form-label" for="exp-amount">금액 (원)</label>
+              <input class="form-input" type="number" id="exp-amount" min="1" placeholder="예: 250000" required>
+            </div>
+          </div>
+          
+          <!-- 메모 입력란 -->
+          <div class="form-group">
+            <label class="form-label" for="exp-memo">메모</label>
+            <textarea class="form-input" id="exp-memo" rows="2" placeholder="추가 메모 입력 (선택)"></textarea>
+          </div>
+
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label class="form-label" for="exp-date">사용일자</label>
+              <input class="form-input" type="date" id="exp-date" required>
+            </div>
+            <div>
+              <label class="form-label" for="exp-receipt">증빙 파일 (JPG, PNG, PDF / 10MB 이하)</label>
+              <input class="form-input" type="file" id="exp-receipt" accept=".jpg, .jpeg, .png, .pdf">
+              <div id="receipt-preview-filename" style="font-size: 12px; color: var(--primary); margin-top: 4px; display: none;"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" id="btn-save-expense" style="flex: 1;">저장 (즉시 반영)</button>
+            <button type="button" class="btn btn-secondary" id="btn-cancel-expense-edit" style="flex: 1; display: none;">수정 취소</button>
+          </div>
+          
+          <!-- 자동 합계 표시 -->
+          <div id="expense-total-sum" style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">
+            총 사용액: 0원
+          </div>
+        </form>
+      </div>
+
+      <!-- 지출 내역 리스트 카드 -->
+      <div class="card">
+        <h3 class="card-title">지출 내역 목록</h3>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="expense-list-table">
+            <thead>
+              <tr>
+                <th>사용일자</th>
+                <th>지출 항목명</th>
+                <th>지출 금액</th>
+                <th>증빙</th>
+                <th>작성자</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- JS에서 동적으로 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 공통 푸터 -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-info">
+        <div>책임자: 조정연 / 서울언북초등학교 / 02-514-5981</div>
+        <div>© 2026 ingyu's AI world. All rights reserved.</div>
+      </div>
+      <div class="footer-links">
+        <a class="footer-link" id="link-privacy">개인정보처리방침</a>
+        <span>|</span>
+        <a class="footer-link" id="link-terms">이용약관</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 개인정보처리방침 모달 -->
+  <div class="modal-overlay" id="modal-privacy">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">개인정보처리방침</h3>
+        <button class="modal-close" onclick="closeModal('modal-privacy')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-privacy-body">
+        <!-- 로딩 실패 시 대비한 정적 fallback 및 동적 주입 -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-privacy')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이용약관 모달 -->
+  <div class="modal-overlay" id="modal-terms">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">이용약관</h3>
+        <button class="modal-close" onclick="closeModal('modal-terms')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-terms-body">
+        <!-- 로딩 실패 시 대비한 정적 fallback 및 동적 주입 -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-terms')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 증빙 영수증 확인 모달 -->
+  <div class="modal-overlay" id="modal-receipt">
+    <div class="modal" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="modal-title">증빙 영수증 확인</h3>
+        <button class="modal-close" onclick="closeModal('modal-receipt')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-receipt-body" style="text-align: center; min-height: 400px; display: flex; align-items: center; justify-content: center;">
+        <!-- JS에서 이미지 태그 또는 PDF iframe 동적 주입 -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-receipt')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 연결 -->
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
